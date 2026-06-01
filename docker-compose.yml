@@ -1,0 +1,18 @@
+services:
+  bob-proxy:
+    build: .
+    container_name: bob-proxy
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8787}:8787"
+    environment:
+      - BOBSHELL_API_KEY=${BOBSHELL_API_KEY}
+      - PROXY_API_KEY=${PROXY_API_KEY}
+      - MAX_CONCURRENT=${MAX_CONCURRENT:-4}
+      - BOB_TIMEOUT=${BOB_TIMEOUT:-120}
+      - DEFAULT_MODEL=${DEFAULT_MODEL:-ibm-bob}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8787/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
